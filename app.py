@@ -1,0 +1,73 @@
+from flask import Flask, request, render_template
+import os
+from PIL import Image
+import torch
+import torch.nn as nn
+from torchvision import transforms
+
+app = Flask(__name__)
+UPLOAD_FOLDER = 'static/uploads'
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+
+image_size = 128
+class_names = ['Dresses', 'Heels', 'Jeans', 'Sandals', 'Shorts', 'Tshirts']
+
+class SimpleCNN(nn.Module):
+    def __init__(self, num_classes):
+        super(SimpleCNN, self).__init__()
+        self.model = nn.Sequential(
+            nn.Conv2d(3, 32, 3, padding=1), nn.ReLU(), nn.MaxPool2d(2),
+            nn.Conv2d(32, 64, 3, padding=1), nn.ReLU(), nn.MaxPool2d(2),
+            nn.Conv2d(64, 128, 3, padding=1), nn.ReLU(), nn.MaxPool2d(2),
+            nn.Flatten(),
+            nn.Linear(128 * (image_size // 8) * (image_size // 8), 512), nn.ReLU(),
+            nn.Dropout(0.3),
+            nn.Linear(512, len(class_names))
+        )
+    def forward(self, x):
+        return self.model(x)
+
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+model = SimpleCNN(len(class_names)).to(device)
+model.load_state_dict(torch.load('product_classifier.pth', map_location=device))
+model.eval()
+
+transform = transforms.Compose([
+    transforms.Resize((image_size, image_size)),
+    transforms.ToTensor(),
+    transforms.Normalize(mean=[0.5]*3, std=[0.5]*3)
+])
+
+@app.route('/', methods=['GET', 'POST'])
+def index():
+    image_path = None
+    prediction = None
+
+    if request.method == 'POST':
+        if 'image' in request.files:
+            # User uploaded image
+            file = request.files['image']
+            if file:
+                filepath = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
+                file.save(filepath)
+                return render_template('index.html', image_path=filepath)
+
+        elif 'classify' in request.form:
+            # User clicked classify
+            image_path = request.form['image_path']
+            if os.path.exists(image_path):
+                img = Image.open(image_path).convert('RGB')
+                img_tensor = transform(img).unsqueeze(0).to(device)
+
+                with torch.no_grad():
+                    outputs = model(img_tensor)
+                    _, predicted = torch.max(outputs, 1)
+                    prediction = class_names[predicted.item()]
+
+                return render_template('index.html', image_path=image_path, prediction=prediction)
+
+    return render_template('index.html')
+
+if __name__ == '__main__':
+    app.run(debug=True)
