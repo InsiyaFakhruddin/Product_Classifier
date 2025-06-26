@@ -27,7 +27,7 @@ CNN trained on Fashion Product Images dataset.
 
 ## 🌐 Deployment
 
-Live at: [https://product-classifier.onrender.com](#)
+Live at: [https://product-classifier-63lq.onrender.com](#)
 
 ## 📦 Installation (for local use)
 
