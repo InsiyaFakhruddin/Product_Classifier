@@ -1,10 +1,4 @@
-*.joblib
-*.pkl
-*.csv
-*.h5
 *.log
-
-# Ignore dataset and images
 images/
 dataset/
-static/uploads/
+
