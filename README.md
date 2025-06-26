@@ -1,36 +1,131 @@
+
 # 🧠 Product Image Classification System
 
-This is a deep learning-based Flask app that classifies product images into categories like:
-- T-shirts
-- Dresses
-- Jeans
-- Shorts
-- Heels
-- Sandals
+This project is a deep learning-based image classification system that predicts the category of fashion products from images. Built with a user-friendly **Flask** web interface, it allows users to upload product images and get real-time predictions. The model is trained using **PyTorch** on a labeled fashion dataset.
 
-## 🚀 How to Use
+---
 
-1. Upload an image of a product
-2. Click "Classify"
-3. See the predicted category
+## Demo
 
-## 💻 Tech Stack
+![Product Classifier Demo](product_classifier_Demo.png)
 
-- Python 3
-- Flask
-- PyTorch
-- HTML/CSS (basic styling)
+---
+
+## 🎯 Features
+
+* Classifies images into multiple fashion product categories:
+
+  * T-shirts
+  * Dresses
+  * Jeans
+  * Shorts
+  * Heels
+  * Sandals
+* Easy-to-use web interface (Flask)
+* Real-time image classification
+* Responsive UI for quick testing
+* Easily extendable for more categories
+
+---
 
 ## 🧠 Model Info
 
-CNN trained on Fashion Product Images dataset.
+* Deep Convolutional Neural Network (CNN) built with **PyTorch**
+* Trained on a curated **Fashion Product Image Dataset**
+* Optimized with data augmentation and dropout for better generalization
+* Achieves high accuracy on validation set
+
+---
+
+## 💻 Tech Stack
+
+* **Python 3**
+* **PyTorch** (Deep Learning Framework)
+* **Flask** (Web Framework)
+* **HTML/CSS** (Basic Frontend)
+* **Pillow / OpenCV** (Image processing)
+* **NumPy / Pandas** (Data handling)
+
+---
+
+## 🚀 How to Use
+
+1. Launch the web app:
+
+   ```bash
+   python app.py
+   ```
+2. Open your browser and go to: [http://127.0.0.1:5000/](http://127.0.0.1:5000/)
+3. Upload an image of a product
+4. Click **Classify**
+5. View the predicted product category instantly!
+
+---
 
 ## 🌐 Deployment
 
-Live at: [https://product-classifier-63lq.onrender.com](#)
+Live Demo: [https://product-classifier-63lq.onrender.com](https://product-classifier-63lq.onrender.com)
 
-## 📦 Installation (for local use)
+---
 
-```bash
-pip install -r requirements.txt
-python app.py
+## 📦 Installation (for Local Use)
+
+1. Clone the repository:
+
+   ```bash
+   git clone https://github.com/yourusername/Product_Classifier.git
+   cd Product_Classifier
+   ```
+
+2. Install the dependencies:
+
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+3. Run the app:
+
+   ```bash
+   python app.py
+   ```
+
+---
+
+## 📁 Project Structure
+
+```
+Product_Classifier/
+├── app.py                  # Flask web application
+├── model.pth               # Trained PyTorch model
+├── static/                 # CSS & uploaded images
+├── templates/              # HTML templates
+├── utils.py                # Image preprocessing and model prediction
+├── requirements.txt        # Python dependencies
+├── README.md               # Project overview
+```
+
+---
+
+## 👩‍💻 Author
+
+**Insiya Fakhruddin**
+AI & Deep Learning Enthusiast
+[GitHub](https://github.com/InsiyaFakhruddin)
+
+---
+
+## 📜 License
+
+This project is licensed under the **MIT License** – feel free to use, modify, and distribute.
+
+---
+
+## 🙏 Acknowledgements
+
+* Dataset: Fashion Product Images (public dataset)
+* PyTorch for deep learning framework
+* Flask for seamless deployment
+
+---
+
+Let me know if you want to add instructions for training the model, data preparation, or conversion to ONNX or TorchScript for deployment.
