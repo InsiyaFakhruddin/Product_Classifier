@@ -2,7 +2,6 @@
 *.pkl
 *.csv
 *.h5
-*.pth
 *.log
 
 # Ignore dataset and images
