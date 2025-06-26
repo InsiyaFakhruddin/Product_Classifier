@@ -34,6 +34,8 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model = SimpleCNN(len(class_names)).to(device)
 model.load_state_dict(torch.load('product_classifier.pth', map_location=device))
 model.eval()
+print("✅ Model loaded successfully.")
+
 
 # 🧽 Preprocessing
 transform = transforms.Compose([
