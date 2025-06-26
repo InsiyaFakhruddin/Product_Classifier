@@ -53,19 +53,44 @@ def index():
                 file.save(filepath)
                 return render_template('index.html', image_path=filepath)
 
+
         elif 'classify' in request.form:
-            # User clicked classify
-            image_path = request.form['image_path']
+
+            image_path = request.form.get('image_path')
+
+            print("👉 Image path received for classification:", image_path)
+
             if os.path.exists(image_path):
-                img = Image.open(image_path).convert('RGB')
-                img_tensor = transform(img).unsqueeze(0).to(device)
 
-                with torch.no_grad():
-                    outputs = model(img_tensor)
-                    _, predicted = torch.max(outputs, 1)
-                    prediction = class_names[predicted.item()]
+                try:
 
-                return render_template('index.html', image_path=image_path, prediction=prediction)
+                    img = Image.open(image_path).convert('RGB')
+
+                    img_tensor = transform(img).unsqueeze(0).to(device)
+
+                    with torch.no_grad():
+
+                        outputs = model(img_tensor)
+
+                        _, predicted = torch.max(outputs, 1)
+
+                        prediction = class_names[predicted.item()]
+
+                        print("✅ Prediction:", prediction)
+
+                    return render_template('index.html', image_path=image_path, prediction=prediction)
+
+                except Exception as e:
+
+                    print("❌ Error during classification:", str(e))
+
+                    return "Error while processing image", 500
+
+            else:
+
+                print("❌ Image not found on server:", image_path)
+
+                return "Image not found", 404
 
     return render_template('index.html')
 
