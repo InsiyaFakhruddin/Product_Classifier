@@ -39,12 +39,14 @@ This project is a deep learning-based image classification system that predicts 
 
 ## 💻 Tech Stack
 
-* **Python 3**
-* **PyTorch** (Deep Learning Framework)
-* **Flask** (Web Framework)
-* **HTML/CSS** (Basic Frontend)
-* **Pillow / OpenCV** (Image processing)
-* **NumPy / Pandas** (Data handling)
+Python 3.10+ – Core programming language
+PyTorch – Model creation, training, and inference
+TorchVision – Image transformations like resizing, normalization, etc.
+Flask – Web framework to build and run the user-facing web app
+Jinja2 – Templating engine used via Flask for rendering HTML
+Pillow (PIL) – Image loading and format conversion in the web app
+HTML / CSS – Basic frontend styling (in templates/ and static/)
+OS – Used for file system operations (creating directories, paths, etc.)
 
 ---
 
@@ -125,7 +127,3 @@ This project is licensed under the **MIT License** – feel free to use, modify,
 * Dataset: Fashion Product Images (public dataset)
 * PyTorch for deep learning framework
 * Flask for seamless deployment
-
----
-
-Let me know if you want to add instructions for training the model, data preparation, or conversion to ONNX or TorchScript for deployment.
