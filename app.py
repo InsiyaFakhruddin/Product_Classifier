@@ -4,6 +4,9 @@ from PIL import Image
 import torch
 import torch.nn as nn
 from torchvision import transforms
+import logging
+logging.basicConfig(level=logging.INFO)
+
 
 app = Flask(__name__)
 UPLOAD_FOLDER = 'static/uploads'
@@ -31,11 +34,21 @@ class SimpleCNN(nn.Module):
 
 # 🔁 Load model ONCE
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-model = SimpleCNN(len(class_names)).to(device)
-print("✅ Model file exists on server:", os.path.exists("product_classifier.pth"))
-model.load_state_dict(torch.load('product_classifier.pth', map_location=device))
-model.eval()
-print("✅ Model loaded successfully.")
+model_path = 'product_classifier.pth'
+model = None
+
+try:
+    if os.path.exists(model_path):
+        logging.info("✅ Model file exists at: %s", model_path)
+        model = SimpleCNN(len(class_names)).to(device)
+        model.load_state_dict(torch.load(model_path, map_location=device))
+        model.eval()
+        logging.info("✅ Model loaded successfully.")
+    else:
+        logging.error("❌ Model file NOT FOUND at: %s", model_path)
+except Exception as e:
+    logging.error("❌ Failed to load model: %s", str(e))
+
 
 
 # 🧽 Preprocessing
@@ -56,12 +69,16 @@ def index():
             if file:
                 filepath = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
                 file.save(filepath)
-                print("✅ Image uploaded:", filepath)
+                logging.info("✅ Image uploaded: %s", filepath)
                 return render_template('index.html', image_path=filepath)
 
         elif 'classify' in request.form:
             image_path = request.form.get('image_path')
-            print("👉 Classifying:", image_path)
+            logging.info("👉 Classifying: %s", image_path)
+
+            if model is None:
+                logging.error("❌ Model is not loaded in memory.")
+                return "Model not loaded", 500
 
             if os.path.exists(image_path):
                 try:
@@ -72,15 +89,15 @@ def index():
                         outputs = model(img_tensor)
                         _, predicted = torch.max(outputs, 1)
                         prediction = class_names[predicted.item()]
-                        print("✅ Prediction:", prediction)
+                        logging.info("✅ Prediction: %s", prediction)
 
                     return render_template('index.html', image_path=image_path, prediction=prediction)
 
                 except Exception as e:
-                    print("❌ Classification error:", str(e))
+                    logging.error("❌ Classification error: %s", str(e))
                     return "Error during prediction", 500
             else:
-                print("❌ Image not found:", image_path)
+                logging.error("❌ Image not found: %s", image_path)
                 return "Image not found", 404
 
     return render_template('index.html')
