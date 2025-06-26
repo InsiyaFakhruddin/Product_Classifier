@@ -13,6 +13,7 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 image_size = 128
 class_names = ['Dresses', 'Heels', 'Jeans', 'Sandals', 'Shorts', 'Tshirts']
 
+# 🧠 Define CNN
 class SimpleCNN(nn.Module):
     def __init__(self, num_classes):
         super(SimpleCNN, self).__init__()
@@ -28,11 +29,13 @@ class SimpleCNN(nn.Module):
     def forward(self, x):
         return self.model(x)
 
+# 🔁 Load model ONCE
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model = SimpleCNN(len(class_names)).to(device)
 model.load_state_dict(torch.load('product_classifier.pth', map_location=device))
 model.eval()
 
+# 🧽 Preprocessing
 transform = transforms.Compose([
     transforms.Resize((image_size, image_size)),
     transforms.ToTensor(),
@@ -46,53 +49,38 @@ def index():
 
     if request.method == 'POST':
         if 'image' in request.files:
-            # User uploaded image
             file = request.files['image']
             if file:
                 filepath = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
                 file.save(filepath)
+                print("✅ Image uploaded:", filepath)
                 return render_template('index.html', image_path=filepath)
 
-
         elif 'classify' in request.form:
-
             image_path = request.form.get('image_path')
-
-            print("👉 Image path received for classification:", image_path)
+            print("👉 Classifying:", image_path)
 
             if os.path.exists(image_path):
-
                 try:
-
                     img = Image.open(image_path).convert('RGB')
-
                     img_tensor = transform(img).unsqueeze(0).to(device)
 
                     with torch.no_grad():
-
                         outputs = model(img_tensor)
-
                         _, predicted = torch.max(outputs, 1)
-
                         prediction = class_names[predicted.item()]
-
                         print("✅ Prediction:", prediction)
 
                     return render_template('index.html', image_path=image_path, prediction=prediction)
 
                 except Exception as e:
-
-                    print("❌ Error during classification:", str(e))
-
-                    return "Error while processing image", 500
-
+                    print("❌ Classification error:", str(e))
+                    return "Error during prediction", 500
             else:
-
-                print("❌ Image not found on server:", image_path)
-
+                print("❌ Image not found:", image_path)
                 return "Image not found", 404
 
     return render_template('index.html')
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=False, host='0.0.0.0', port=10000)  # Required for Render
