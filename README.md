@@ -39,14 +39,14 @@ This project is a deep learning-based image classification system that predicts 
 
 ## 💻 Tech Stack
 
-Python 3.10+ – Core programming language
-PyTorch – Model creation, training, and inference
-TorchVision – Image transformations like resizing, normalization, etc.
-Flask – Web framework to build and run the user-facing web app
-Jinja2 – Templating engine used via Flask for rendering HTML
-Pillow (PIL) – Image loading and format conversion in the web app
-HTML / CSS – Basic frontend styling (in templates/ and static/)
-OS – Used for file system operations (creating directories, paths, etc.)
+* Python 3.10+ – Core programming language
+* PyTorch – Model creation, training, and inference
+* TorchVision – Image transformations like resizing, normalization, etc.
+* Flask – Web framework to build and run the user-facing web app
+* Jinja2 – Templating engine used via Flask for rendering HTML
+* Pillow (PIL) – Image loading and format conversion in the web app
+* HTML / CSS – Basic frontend styling (in templates/ and static/)
+* OS – Used for file system operations (creating directories, paths, etc.)
 
 ---
 
